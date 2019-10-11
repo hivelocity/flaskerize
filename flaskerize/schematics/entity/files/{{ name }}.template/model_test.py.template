@@ -1,7 +1,7 @@
 from pytest import fixture
 from flask_sqlalchemy import SQLAlchemy
 
-from app.test.fixtures import app, db  # noqa
+from ...app import db
 from .model import {{ capitalize(name) }}
 
 
@@ -14,7 +14,7 @@ def test_{{ capitalize(name) }}_create({{ lower(name) }}: {{ capitalize(name) }}
     assert {{ lower(name) }}
 
 
-def test_{{ capitalize(name) }}_retrieve({{ lower(name) }}: {{ capitalize(name) }}, db: SQLAlchemy):  # noqa
+def test_{{ capitalize(name) }}_retrieve({{ lower(name) }}: {{ capitalize(name) }}):
     db.session.add({{ lower(name) }})
     db.session.commit()
     s = {{ capitalize(name) }}.query.first()

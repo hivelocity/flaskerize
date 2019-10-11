@@ -2,7 +2,7 @@ from unittest.mock import patch
 from flask.testing import FlaskClient
 from flask.wrappers import Response
 
-from app.test.fixtures import client, app  # noqa
+from tests.conftest import app, flask_client as client
 from .model import {{ capitalize(name) }}
 from .schema import {{ capitalize(name) }}Schema
 from .service import {{ capitalize(name) }}Service
@@ -52,11 +52,11 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}Resource:
     def test_post(self, client: FlaskClient):  # noqa
         with client:
 
-            payload = dict(name="Test name", description="Test description")
+            payload = dict({{ lower(name) }}Id=789, name="Test name", description="Test description")
             result: dict = client.post("/api/{{ lower(name) }}/", json=payload).get_json()
             expected = (
                 {{ capitalize(name) }}Schema()
-                .dump({{ capitalize(name) }}(name=payload["name"], description=payload["description"]))
+                .dump({{ capitalize(name) }}({{ lower(name) }}_id=payload["{{ lower(name) }}Id"], name=payload["name"], description=payload["description"]))
                 .data
             )
             assert result == expected

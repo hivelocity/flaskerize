@@ -1,4 +1,4 @@
-from app.test.fixtures import app, db  # noqa
+from ...app import db
 from flask_sqlalchemy import SQLAlchemy
 
 from typing import List
@@ -7,7 +7,7 @@ from .service import {{ capitalize(name) }}Service  # noqa
 from .interface import {{ capitalize(name) }}Interface
 
 
-def test_get_all(db: SQLAlchemy):  # noqa
+def test_get_all():
     yin: {{ capitalize(name) }} = {{ capitalize(name) }}({{ lower(name) }}_id=1, name="Yin", description="Test description")
     yang: {{ capitalize(name) }} = {{ capitalize(name) }}({{ lower(name) }}_id=2, name="Yaang", description="Test description")
     db.session.add(yin)
@@ -20,7 +20,7 @@ def test_get_all(db: SQLAlchemy):  # noqa
     assert yin in results and yang in results
 
 
-def test_update(db: SQLAlchemy):  # noqa
+def test_update():
     yin: {{ capitalize(name) }} = {{ capitalize(name) }}({{ lower(name) }}_id=1, name="Yin", description="Test description")
 
     db.session.add(yin)
@@ -33,7 +33,7 @@ def test_update(db: SQLAlchemy):  # noqa
     assert result.name == "Yang"
 
 
-def test_delete_by_id(db: SQLAlchemy):  # noqa
+def test_delete_by_id():
     yin: {{ capitalize(name) }} = {{ capitalize(name) }}({{ lower(name) }}_id=1, name="Yin", description="Test description")
     yang: {{ capitalize(name) }} = {{ capitalize(name) }}({{ lower(name) }}_id=2, name="Yang", description="Test description")
     db.session.add(yin)
@@ -47,7 +47,7 @@ def test_delete_by_id(db: SQLAlchemy):  # noqa
     assert yin not in results and yang in results
 
 
-def test_create(db: SQLAlchemy):  # noqa
+def test_create():
 
     yin: {{ capitalize(name) }}Interface = {{ capitalize(name) }}Interface(
         {{ lower(name) }}_id=1, name="Yin", description="Test description"
