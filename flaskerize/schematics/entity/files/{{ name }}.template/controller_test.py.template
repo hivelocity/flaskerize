@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from flask import url_for
 from flask.testing import FlaskClient
 from flask.wrappers import Response
 
@@ -17,7 +18,7 @@ class Test{{ capitalize(name) }}Resource:
     @patch.object({{ capitalize(name) }}Service, "get_all", lambda: [{{ lower(name) }}(123), {{ lower(name) }}(456)])
     def test_get(self, client: FlaskClient):  # noqa
         with client:
-            results = client.get("/api/{{ lower(name) }}", follow_redirects=True).get_json()
+            results = client.get(url_for("{{ capitalize(name) }}_{{ lower(name) }}_resource"), follow_redirects=True).get_json()
             expected = {{ capitalize(name) }}Schema(many=True).dump([{{ lower(name) }}(456), {{ lower(name) }}(123)])
             for r in results:
                 assert r in expected
@@ -31,7 +32,7 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}Resource:
     )
     def test_get(self, client: FlaskClient):  # noqa
         with client:
-            results: dict = client.get("/api/{{ lower(name) }}", follow_redirects=True).get_json()
+            results: dict = client.get(url_for("{{ capitalize(name) }}_{{ lower(name) }}_resource"), follow_redirects=True).get_json()
             expected = (
                 {{ capitalize(name) }}Schema(many=True)
                 .dump([{{ lower(name) }}(123, name="Test name 1"), {{ lower(name) }}(456, name="Test name 2")])
@@ -52,7 +53,7 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}Resource:
         with client:
 
             payload = dict({{ lower(name) }}Id=789, name="Test name", description="Test description")
-            result: dict = client.post("/api/{{ lower(name) }}/", json=payload).get_json()
+            result: dict = client.post(url_for("{{ capitalize(name) }}_{{ lower(name) }}_resource"), json=payload).get_json()
             expected = (
                 {{ capitalize(name) }}Schema()
                 .dump({{ capitalize(name) }}({{ lower(name) }}_id=payload["{{ lower(name) }}Id"], name=payload["name"], description=payload["description"]))
@@ -70,14 +71,14 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}IdResource:
     @patch.object({{ capitalize(name) }}Service, "get_by_id", lambda id: {{ capitalize(name) }}({{ lower(name) }}_id=id))
     def test_get(self, client: FlaskClient):  # noqa
         with client:
-            result: dict = client.get("/api/{{ lower(name) }}/123").get_json()
+            result: dict = client.get(url_for("{{ capitalize(name) }}_{{ lower(name) }}_id_resource", {{ lower(name) }}Id=123)).get_json()
             expected = {{ capitalize(name) }}({{ lower(name) }}_id=123)
             assert result["{{ lower(name) }}Id"] == expected.{{ lower(name) }}_id
 
     @patch.object({{ capitalize(name) }}Service, "delete_by_id", lambda id: [id])
     def test_delete(self, client: FlaskClient):  # noqa
         with client:
-            result: dict = client.delete("/api/{{ lower(name) }}/123").get_json()
+            result: dict = client.delete(url_for("{{ capitalize(name) }}_{{ lower(name) }}_id_resource", {{ lower(name) }}Id=123)).get_json()
             expected = dict(status="Success", id=[123])
             assert result == expected
 
@@ -86,7 +87,7 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}IdResource:
     def test_put(self, client: FlaskClient):  # noqa
         with client:
             result: dict = client.put(
-                "/api/{{ lower(name) }}/123", json={"name": "New name"}
+                url_for("{{ capitalize(name) }}_{{ lower(name) }}_id_resource", {{ lower(name) }}Id=123), json={"name": "New name"}
             ).get_json()
             expected: dict = {{ capitalize(name) }}Schema().dump(
                 {{ capitalize(name) }}({{ lower(name) }}_id=123, name="New name")
