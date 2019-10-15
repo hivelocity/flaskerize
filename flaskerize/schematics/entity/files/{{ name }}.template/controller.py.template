@@ -22,7 +22,7 @@ class {{ capitalize(name) }}Resource(Resource):
 
         return {{ capitalize(name) }}Service.get_all()
 
-    @accepts(schema={{ capitalize(name) }}Schema, api=api)
+    @accepts(schema={{ capitalize(name) }}Schema(exclude=["{{ lower(name) }}Id"]), api=api)
     @responds(schema={{ capitalize(name) }}Schema)
     def post(self):
         """Create a Single {{ capitalize(name) }}"""
