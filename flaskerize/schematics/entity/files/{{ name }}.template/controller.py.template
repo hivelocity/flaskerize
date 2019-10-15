@@ -14,7 +14,7 @@ api = Namespace("{{ capitalize(name) }}", description="{{ capitalize(name) }} in
 
 @api.route("/")
 class {{ capitalize(name) }}Resource(Resource):
-    """{{ capitalize(name) }}s"""
+    """{{ capitalize(name) }}s."""
 
     @responds(schema={{ capitalize(name) }}Schema, many=True)
     def get(self) -> List[{{ capitalize(name) }}]:
@@ -24,8 +24,10 @@ class {{ capitalize(name) }}Resource(Resource):
 
     @accepts(schema={{ capitalize(name) }}Schema(exclude=["{{ lower(name) }}Id"]), api=api)
     @responds(schema={{ capitalize(name) }}Schema)
+    @api.response(201, "{{ capitalize(name) }} created.") # TODO: Research best practices for response codes
+    @api.response(400, "Bad request.") #  TODO: Research best practices for response codes
     def post(self):
-        """Create a Single {{ capitalize(name) }}"""
+        """Create a Single {{ capitalize(name) }}."""
 
         return {{ capitalize(name) }}Service.create(request.parsed_obj)
 
@@ -35,12 +37,13 @@ class {{ capitalize(name) }}Resource(Resource):
 class {{ capitalize(name) }}IdResource(Resource):
     @responds(schema={{ capitalize(name) }}Schema)
     def get(self, {{ lower(name) }}Id: int) -> {{ capitalize(name) }}:
-        """Get Single {{ capitalize(name) }}"""
+        """Get Single {{ capitalize(name) }}."""
 
         return {{ capitalize(name) }}Service.get_by_id({{ lower(name) }}Id)
 
+    @api.response(204, "{{ capitalize(name) }} deleted.") # TODO: Research best practices for response codes
     def delete(self, {{ lower(name) }}Id: int) -> Response:
-        """Delete Single {{ capitalize(name) }}"""
+        """Delete Single {{ capitalize(name) }}."""
 
         from flask import jsonify
 
@@ -49,8 +52,10 @@ class {{ capitalize(name) }}IdResource(Resource):
 
     @accepts(schema={{ capitalize(name) }}Schema, api=api)
     @responds(schema={{ capitalize(name) }}Schema)
+    @api.response(200, "{{ capitalize(name) }} updated.") # TODO: Research best practices for response codes
+    @api.response(400, "Bad request.") # TODO: Research best practices for response codes
     def put(self, {{ lower(name) }}Id: int) -> {{ capitalize(name) }}:
-        """Update Single {{ capitalize(name) }}"""
+        """Update Single {{ capitalize(name) }}."""
 
         changes = request.parsed_obj
         {{ lower(name) }} = {{ capitalize(name) }}Service.get_by_id({{ lower(name) }}Id)
