@@ -44,7 +44,6 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}Resource:
         {{ capitalize(name) }}Service,
         "create",
         lambda create_request: {{ capitalize(name) }}(
-            {{ lower(name) }}_id=create_request["{{ lower(name) }}_id"],
             name=create_request["name"],
             description=create_request["description"],
         ),
@@ -52,11 +51,11 @@ class Test{{ capitalize(name) }}{{ capitalize(name) }}Resource:
     def test_post(self, client: FlaskClient):  # noqa
         with client:
 
-            payload = dict({{ lower(name) }}Id=789, name="Test name", description="Test description")
+            payload = dict(name="Test name", description="Test description")
             result: dict = client.post(url_for("{{ capitalize(name) }}_{{ lower(name) }}_resource"), json=payload).get_json()
             expected = (
                 {{ capitalize(name) }}Schema()
-                .dump({{ capitalize(name) }}({{ lower(name) }}_id=payload["{{ lower(name) }}Id"], name=payload["name"], description=payload["description"]))
+                .dump({{ capitalize(name) }}(name=payload["name"], description=payload["description"]))
             )
             assert result == expected
 
