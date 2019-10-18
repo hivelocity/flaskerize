@@ -9,5 +9,4 @@ class {{ capitalize(name) }}Schema(Schema):
 
     {{ lower(name) }}Id = fields.Number(attribute="{{ lower(name) }}_id", default=1)
     name = fields.String(attribute="name", required=True, default="New {{capitalize(name) }}")
-    description = fields.String(attribute="description", required=True, default="Default Description")
-
+    description = fields.String(attribute="description", required=False, default="Default Description")
